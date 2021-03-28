@@ -183,7 +183,7 @@ describe('Semaphore', function () {
       const sem1 = new Semaphore({ maxCapacity: 1 })
       sem1.enter()
       expect(() => { sem1.leave(null) }).to.throw()
-      expect(() => { sem1.leave("foobar") }).to.throw()
+      expect(() => { sem1.leave('foobar') }).to.throw()
       expect(() => { sem1.leave(function () {}) }).to.throw()
       expect(() => { sem1.leave({}) }).to.throw()
     })
