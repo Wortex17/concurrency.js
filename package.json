@@ -12,10 +12,11 @@
     "test:watch": "npm test -- --watch",
     "docs": "jsdoc --readme README.md ./lib/*.js -d ./docs && jsdoc2md ./lib/*.js > ./api.md",
     "build": "npm run build:merge && babel ./dist/index.js --out-dir ./dist --source-maps",
-    "build:merge": "rm -rf ./dist/** && rollup lib/index.js --file dist/index.js --format 'cjs'",
+    "build:merge": "npm run build:clean && rollup lib/index.js --file dist/index.js --format 'cjs'",
     "build:min": "minify ./dist/index.js --out-file ./dist/index.min.js --mangle.keepFnName --mangle.keepClassName --",
     "build:full": "npm run docs && npm run build && npm run build:min",
-    "build:ci": "npm run lint && npm run test && npm run build:full"
+    "build:ci": "npm run lint && npm run test && npm run build:full",
+    "build:clean": "rimraf ./dist/**"
   },
   "babel": {
     "presets": [
@@ -71,6 +72,7 @@
     "jsdoc-to-markdown": "^5.0.3",
     "mocha": "^7.2.0",
     "nyc": "^15.1.0",
+    "rimraf": "^3.0.2",
     "rollup": "^2.30.0",
     "snazzy": "^8.0.0",
     "standard": "^14.3.4"
