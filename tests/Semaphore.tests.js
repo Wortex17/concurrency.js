@@ -1,8 +1,12 @@
 'use strict'
 
 import { describe, it } from 'mocha'
-import { expect } from 'chai'
+import chai from 'chai'
+import spies from 'chai-spies'
 import { Semaphore } from '../lib'
+
+chai.use(spies)
+const expect = chai.expect
 
 describe('Semaphore', function () {
   it('throws exception if constructed without options', function () {
@@ -114,6 +118,7 @@ describe('Semaphore', function () {
       expect(sem1ticket1).to.be.an('object')
       expect(sem1ticket1).to.have.property('id').that.is.a('number')
       expect(sem1ticket1).to.have.property('t').that.is.a('number')
+      expect(sem1ticket1).to.have.property('dispose').that.is.a('function')
     })
 
     it('returns a different ticket for every entering', function () {
@@ -201,6 +206,22 @@ describe('Semaphore', function () {
 
       sem1.leave(sem1ticket1)
       expect(() => { sem1.leave(sem1ticket1) }).to.throw()
+    })
+  })
+})
+
+describe('SemaphoreTicket', function () {
+  describe('dispose()', function () {
+    it('calls `leave()` on the semaphore', function () {
+      const sem1 = new Semaphore({ maxCapacity: 1 })
+      const sem1ticket1 = sem1.enter()
+
+      const leaveSpy = chai.spy.on(sem1, 'leave');
+
+      expect(sem1).to.have.property('usedCapacity', 1)
+      sem1ticket1.dispose()
+      expect(leaveSpy).to.have.been.called();
+      expect(sem1).to.have.property('usedCapacity', 0)
     })
   })
 })
