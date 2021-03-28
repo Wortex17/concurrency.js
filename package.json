@@ -1,7 +1,7 @@
 {
-  "name": "my-awesome-package",
-  "version": "1.0.1",
-  "description": "Look at this great package. Lots of stuff.",
+  "name": "concurreny.js",
+  "version": "0.0.1",
+  "description": "Classes and Functions for concurrent programming in ES6+ Javascript.",
   "main": "dist/index.js",
   "scripts": {
     "lint": "standard | snazzy",
@@ -43,7 +43,7 @@
   "targets": "> 0.25%, not dead",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/jankapunkt/npm-package-template.git"
+    "url": "git+ssh://git@github.com/Wortex17/concurrency.js"
   },
   "keywords": [
     "awesome",
@@ -54,9 +54,9 @@
   "author": "Jan Küster",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jankapunkt/npm-package-template/issues"
+    "url": "https://github.com/Wortex17/concurrency.js/issues"
   },
-  "homepage": "https://github.com/jankapunkt/npm-package-template#readme",
+  "homepage": "https://github.com/Wortex17/concurrency.js#readme",
   "devDependencies": {
     "@babel/cli": "^7.12.1",
     "@babel/core": "^7.12.3",
