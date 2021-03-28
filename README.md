@@ -1,22 +1,20 @@
-# :package: NPM Package Template :package:
+# concurrency.js
 
-![Test suite](https://github.com/jankapunkt/npm-package-template/workflows/Test%20suite/badge.svg)
-[![Build Status](https://travis-ci.org/jankapunkt/npm-package-template.svg?branch=master)](https://travis-ci.org/jankapunkt/npm-package-template)
+![Test suite](https://github.com/Wortex17/concurrency.js/workflows/Test%20suite/badge.svg)
+[![Build Status](https://travis-ci.org/jWortex17/concurrency.js.svg?branch=master)](https://travis-ci.org/jankapunkt/npm-package-template)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-![GitHub](https://img.shields.io/github/license/jankapunkt/npm-package-template)
+[![Project Status: Concept – Minimal or no implementation has been done yet, or the repository is only intended to be a limited example, demo, or proof-of-concept.](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept)
+![GitHub](https://img.shields.io/github/license/Wortex17/concurrency.js)
 
-Minimal tested and fully functional NPM package template project for ES6+ Javascript.
+Classes and Functions for concurrent programming in ES6+ Javascript.
 
-## About this package
+## Getting started
 
-This template is intended to allow you to **start developing immediatly** with a working set
-of tools and scripts that play well together.
+//TODO
 
-It is little opinionated to the point, that only the most basic tools are integrated.
-If you want a different flavour you can fork this project and easily replace the tools or add new ones.
+## Development
 
-## Which tools are used?
+### Which tools are used?
 
 All tools are only defined as **`dev-dependencies`**:
 
@@ -29,12 +27,7 @@ All tools are only defined as **`dev-dependencies`**:
 * [GitHub actions](https://github.com/features/actions) for continuous integration
 
 
-## Getting started
-
-Just create your Js files in the `./lib` folder and add the tests in the `test` folder.
-
-
-## Code Quality
+### Code Quality
 
 We use `standard` as opinionated but zero-config linter.
 You can run lint in two modes:
