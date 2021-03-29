@@ -26,7 +26,13 @@
     "env": {
       "test": {
         "plugins": [
-          "istanbul"
+          "istanbul",
+          [
+            "@babel/plugin-transform-runtime",
+            {
+              "regenerator": true
+            }
+          ]
         ]
       }
     }
@@ -64,6 +70,7 @@
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
     "@babel/register": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.13.10",
     "babel-minify": "^0.5.1",
     "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.2.0",
