@@ -157,6 +157,37 @@ describe('Semaphore', function () {
     })
   })
 
+  describe('tryEnter()', function () {
+    it('calls enter() when hasFreeCapacity', function () {
+      const sem = new Semaphore({ maxCapacity: 1 })
+      const enterSpy = chai.spy.on(sem, 'enter')
+
+      sem.tryEnter()
+      // eslint-disable-next-line no-unused-expressions
+      expect(enterSpy).to.have.been.called.once
+    })
+
+    it('returns a valid ticket', function () {
+      const sem1 = new Semaphore({ maxCapacity: 1 })
+      const sem1ticket1 = sem1.tryEnter()
+      expect(sem1ticket1).to.be.an('object')
+      expect(sem1ticket1).to.have.property('id').that.is.a('number')
+      expect(sem1ticket1).to.have.property('t').that.is.a('number')
+      expect(sem1ticket1).to.have.property('dispose').that.is.a('function')
+    })
+
+    it('doesn\'t call enter() and returns false when !hasFreeCapacity', function () {
+      const sem = new Semaphore({ maxCapacity: 0 })
+      const enterSpy = chai.spy.on(sem, 'enter')
+
+      const sem1ticket1 = sem.tryEnter()
+      // eslint-disable-next-line no-unused-expressions
+      expect(enterSpy).to.have.not.been.called.once
+      // eslint-disable-next-line no-unused-expressions
+      expect(sem1ticket1).to.be.false
+    })
+  })
+
   describe('leave()', function () {
     it('reduces usedCapacity & increases freeCapacity', function () {
       const sem1 = new Semaphore({ maxCapacity: 1 })
