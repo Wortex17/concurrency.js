@@ -256,6 +256,19 @@ describe('Semaphore', function () {
       expect(calledArgs).to.be.eql(passedArgs)
     })
 
+    it('throws exception when there is no capacity', function () {
+      const sem0 = new Semaphore({ maxCapacity: 0 })
+      let wasCalled = false
+      const func = function func (...args) {
+        wasCalled = true
+      }
+
+      // eslint-disable-next-line no-unused-expressions
+      expect(() => { sem0.call(func) }).to.throw
+      // eslint-disable-next-line no-unused-expressions
+      expect(wasCalled).to.be.false
+    })
+
     it('passes on the exception the passed function throws', function () {
       const sem1 = new Semaphore({ maxCapacity: 1 })
       let thrownException = null
@@ -333,6 +346,69 @@ describe('Semaphore', function () {
       expect(exceptionWasThrown).to.be.true
       // eslint-disable-next-line no-unused-expressions
       expect(leaveSpy).to.have.been.called.once
+    })
+  })
+
+  describe('tryCall()', function () {
+    it('forwards to call() with the passed context & args', function () {
+      const sem1 = new Semaphore({ maxCapacity: 1 })
+      const callSpy = chai.spy.on(sem1, 'call')
+      const passedContext = {}
+      const passedArgs = [1, 3, 2, null, {}]
+      const func = function func (...args) {}
+      sem1.tryCall(func, passedContext, ...passedArgs)
+
+      expect(callSpy).to.have.been.called.once.with.exactly(func, passedContext, ...passedArgs)
+    })
+
+    it('does not forward to call() when there is no capacity', function () {
+      const sem0 = new Semaphore({ maxCapacity: 0 })
+      const callSpy = chai.spy.on(sem0, 'call')
+      let wasCalled = false
+      const func = function func (...args) {
+        wasCalled = true
+      }
+      sem0.tryCall(func)
+
+      // eslint-disable-next-line no-unused-expressions
+      expect(callSpy).to.have.been.not.called
+      // eslint-disable-next-line no-unused-expressions
+      expect(wasCalled).to.be.false
+    })
+
+    it('passes on the exception the passed function throws', function () {
+      const sem1 = new Semaphore({ maxCapacity: 1 })
+      let thrownException = null
+      let caughtException = null
+      try {
+        sem1.tryCall(function func (...args) {
+          thrownException = new Error('Error thrown inside callAsync func')
+          throw thrownException
+        })
+      } catch (e) {
+        caughtException = e
+      }
+
+      // eslint-disable-next-line no-unused-expressions
+      expect(caughtException).to.not.be.null
+      expect(caughtException).to.be.eql(thrownException)
+    })
+
+    it('returns what the passed function returned', function () {
+      function testCase (returnVal) {
+        const sem1 = new Semaphore({ maxCapacity: 1 })
+        const receivedVal = sem1.tryCall(function func () {
+          return returnVal
+        })
+        expect(receivedVal).to.be.equal(returnVal)
+      }
+
+      testCase()
+      testCase(0)
+      testCase(1)
+      testCase('foobar')
+      testCase({})
+      testCase([])
     })
   })
 
