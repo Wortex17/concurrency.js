@@ -209,6 +209,102 @@ describe('Semaphore', function () {
     })
   })
 
+  describe('call()', function () {
+    it('calls the passed function with the passed context & args', function () {
+      const sem1 = new Semaphore({ maxCapacity: 1 })
+      const passedContext = {}
+      const passedArgs = [1, 3, 2, null, {}]
+      let calledContext = null
+      let calledArgs = []
+      sem1.call(function func (...args) {
+        calledContext = this
+        calledArgs = args
+      }, passedContext, ...passedArgs)
+
+      expect(calledContext).to.be.equal(passedContext)
+      expect(calledArgs).to.be.eql(passedArgs)
+    })
+
+    it('passes on the exception the passed function throws', function () {
+      const sem1 = new Semaphore({ maxCapacity: 1 })
+      let thrownException = null
+      let caughtException = null
+      try {
+        sem1.call(function func (...args) {
+          thrownException = new Error('Error thrown inside callAsync func')
+          throw thrownException
+        })
+      } catch (e) {
+        caughtException = e
+      }
+
+      // eslint-disable-next-line no-unused-expressions
+      expect(caughtException).to.not.be.null
+      expect(caughtException).to.be.eql(thrownException)
+    })
+
+    it('returns what the passed function returned', function () {
+      function testCase (returnVal) {
+        const sem1 = new Semaphore({ maxCapacity: 1 })
+        const receivedVal = sem1.call(function func () {
+          return returnVal
+        })
+        expect(receivedVal).to.be.equal(returnVal)
+      }
+
+      testCase()
+      testCase(0)
+      testCase(1)
+      testCase('foobar')
+      testCase({})
+      testCase([])
+    })
+
+    it('calls enter, func, leave', function () {
+      const sem1 = new Semaphore({ maxCapacity: 1 })
+      const enterSpy = chai.spy.on(sem1, 'enter')
+      let funcWasCalled = false
+      const leaveSpy = chai.spy.on(sem1, 'leave')
+
+      sem1.call(function func () {
+        funcWasCalled = true
+      })
+
+      // eslint-disable-next-line no-unused-expressions
+      expect(enterSpy).to.have.been.called.once
+      // eslint-disable-next-line no-unused-expressions
+      expect(funcWasCalled).to.be.true
+      // eslint-disable-next-line no-unused-expressions
+      expect(leaveSpy).to.have.been.called.once
+    })
+
+    it('calls enter, func, leave, even on exception', function () {
+      const sem1 = new Semaphore({ maxCapacity: 1 })
+      const enterSpy = chai.spy.on(sem1, 'enter')
+      let funcWasCalled = false
+      let exceptionWasThrown = false
+      const leaveSpy = chai.spy.on(sem1, 'leave')
+
+      try {
+        sem1.call(function func () {
+          funcWasCalled = true
+          throw new Error('Error thrown inside callAsync func')
+        })
+      } catch (e) {
+        exceptionWasThrown = true
+      }
+
+      // eslint-disable-next-line no-unused-expressions
+      expect(enterSpy).to.have.been.called.once
+      // eslint-disable-next-line no-unused-expressions
+      expect(funcWasCalled).to.be.true
+      // eslint-disable-next-line no-unused-expressions
+      expect(exceptionWasThrown).to.be.true
+      // eslint-disable-next-line no-unused-expressions
+      expect(leaveSpy).to.have.been.called.once
+    })
+  })
+
   describe('callAsync()', function () {
     it('calls the passed function with the passed context & args', async function () {
       const sem1 = new Semaphore({ maxCapacity: 1 })
