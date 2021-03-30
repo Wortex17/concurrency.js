@@ -507,6 +507,69 @@ describe('Semaphore', function () {
       expect(leaveSpy).to.have.been.called.once
     })
   })
+
+  describe('tryCallAsync()', function () {
+    it('forwards to callAsync() with the passed context & args', async function () {
+      const sem1 = new Semaphore({ maxCapacity: 1 })
+      const callAsyncSpy = chai.spy.on(sem1, 'callAsync')
+      const passedContext = {}
+      const passedArgs = [1, 3, 2, null, {}]
+      const func = async function func (...args) {}
+      await sem1.tryCallAsync(func, passedContext, ...passedArgs)
+
+      expect(callAsyncSpy).to.have.been.called.once.with.exactly(func, passedContext, ...passedArgs)
+    })
+
+    it('does not forward to callAsync() when there is no capacity', async function () {
+      const sem0 = new Semaphore({ maxCapacity: 0 })
+      const callAsyncSpy = chai.spy.on(sem0, 'callAsync')
+      let wasCalled = false
+      const func = async function func (...args) {
+        wasCalled = true
+      }
+      await sem0.tryCallAsync(func)
+
+      // eslint-disable-next-line no-unused-expressions
+      expect(callAsyncSpy).to.have.been.not.called
+      // eslint-disable-next-line no-unused-expressions
+      expect(wasCalled).to.be.false
+    })
+
+    it('passes on the exception the passed function throws', async function () {
+      const sem1 = new Semaphore({ maxCapacity: 1 })
+      let thrownException = null
+      let caughtException = null
+      try {
+        await sem1.tryCallAsync(async function func (...args) {
+          thrownException = new Error('Error thrown inside callAsync func')
+          throw thrownException
+        })
+      } catch (e) {
+        caughtException = e
+      }
+
+      // eslint-disable-next-line no-unused-expressions
+      expect(caughtException).to.not.be.null
+      expect(caughtException).to.be.eql(thrownException)
+    })
+
+    it('returns what the passed function returned', async function () {
+      async function testCase (returnVal) {
+        const sem1 = new Semaphore({ maxCapacity: 1 })
+        const receivedVal = await sem1.tryCallAsync(function func () {
+          return returnVal
+        })
+        expect(receivedVal).to.be.equal(returnVal)
+      }
+
+      await testCase()
+      await testCase(0)
+      await testCase(1)
+      await testCase('foobar')
+      await testCase({})
+      await testCase([])
+    })
+  })
 })
 
 describe('SemaphoreTicket', function () {
