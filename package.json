@@ -2,7 +2,7 @@
   "name": "concurreny.js",
   "version": "0.0.1",
   "description": "Classes and Functions for concurrent programming in ES6+ Javascript.",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "lint": "standard | snazzy",
     "lint:fix": "standard --fix | snazzy",
