@@ -22,7 +22,13 @@
   },
   "babel": {
     "presets": [
-      "@babel/env"
+      ["@babel/preset-env",
+        {
+          "targets": {
+            "esmodules": true
+          }
+        }
+      ]
     ],
     "env": {
       "test": {
@@ -49,7 +55,6 @@
       "dist/"
     ]
   },
-  "targets": "> 0.25%, not dead",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/Wortex17/concurrency.js"
